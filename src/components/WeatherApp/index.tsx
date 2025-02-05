@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { MoonIcon, SunIcon } from '@heroicons/react/24/outline';
+
 import { CityDropdown } from '../elements';
+import {
+  getCurrentTime,
+  getDayAndTime,
+  getWeatherDetails,
+} from '../../utils/helper';
 
 export default function WeatherApp(): JSX.Element {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -55,29 +61,6 @@ export default function WeatherApp(): JSX.Element {
     }
   };
 
-  const getWeatherDetails = () => {
-    return new Promise((resolve, reject) => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-            resolve({ latitude: latitude, longitude: longitude });
-          },
-          (error) => {
-            console.log('error', error);
-            reject('Error : Fetching user location coordinates');
-          },
-          {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 0,
-          }
-        );
-      }
-    });
-  };
-
   function handleFetchData(value: unknown): void | PromiseLike<void> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { latitude, longitude }: any = value;
@@ -89,52 +72,6 @@ export default function WeatherApp(): JSX.Element {
       .then((data) => setData(data))
       .catch((err) => console.log('err', err));
   }
-
-  const getCurrentTime = (): string => {
-    const time = new Date();
-    let hours: number | string = time.getHours();
-    let minutes: number | string = time.getMinutes();
-    let seconds: number | string = time.getSeconds();
-    let meridiem = 'AM';
-
-    if (hours > 12) {
-      hours = hours - 12;
-      meridiem = 'PM';
-    }
-    if (hours < 10) {
-      hours = `0${hours}`;
-    }
-
-    if (minutes < 10) {
-      minutes = `0${minutes}`;
-    }
-
-    if (seconds < 10) {
-      seconds = `0${seconds}`;
-    }
-
-    return `${hours}:${minutes}:${seconds} ${meridiem}`;
-  };
-
-  const dayObj = {
-    1: 'Monday',
-    2: 'Tuesday',
-    3: 'Wednesday',
-    4: 'Thursday',
-    5: 'Friday',
-    6: 'Saturday',
-    7: 'Sunday',
-  };
-
-  const getDayAndTime = () => {
-    const date = new Date();
-    const todayDate = date.toLocaleDateString();
-    const day = date.getDay();
-
-    const dayResult = dayObj[day as keyof typeof dayObj];
-
-    return { todayDate, dayResult };
-  };
 
   const { todayDate, dayResult }: { todayDate: string; dayResult: string } =
     getDayAndTime();
@@ -205,7 +142,6 @@ export default function WeatherApp(): JSX.Element {
             </div>
           </div>
           <CityDropdown data={data} setData={setData} />
-
           <div
             className={`w-2/3 h-1/3 flex flex-col text-xl justify-center items-center rounded-xl mx-auto ${
               bgColor === 'bg-violet-800'
@@ -213,9 +149,9 @@ export default function WeatherApp(): JSX.Element {
                 : 'bg-white'
             } text-2xl`}
           >
-            <p>{todayDate}</p>
-            <p>{dayResult}</p>
-            <p>{tempInCelcius}°C</p>
+            <p className='text-3xl leading-10 font-medium'>{todayDate}</p>
+            <p className='text-3xl leading-10 font-medium'>{dayResult}</p>
+            <p className='text-3xl leading-10 font-medium'>{tempInCelcius}°C</p>
           </div>
         </div>
       )}
