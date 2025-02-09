@@ -1,4 +1,10 @@
 import { useState } from 'react';
+import { defaultCityOptions } from '../../utils/helper';
+
+interface DefaultCityOptionsType {
+  id: number;
+  city: string;
+}
 
 export default function CitySelectionWithSearch({
   setData,
@@ -14,6 +20,8 @@ export default function CitySelectionWithSearch({
     string,
     React.Dispatch<React.SetStateAction<string>>
   ] = useState<string>('');
+
+  const bgColor: string | null = localStorage.getItem('bgColor');
 
   const handleCityChange = (e: {
     target: { value: React.SetStateAction<string> };
@@ -40,7 +48,9 @@ export default function CitySelectionWithSearch({
 
   return (
     <form
-      className='w-full absolute mt-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 p-1 space-y-1'
+      className={`w-full absolute mt-2 rounded-md shadow-lg ${
+        bgColor === 'bg-cyan-200' ? 'bg-black' : 'bg-white'
+      } ring-1 hover:bg-slate-400 ring-slate-200 p-1 space-y-1`}
       onSubmit={handleCitySubmit}
     >
       <input
@@ -48,35 +58,29 @@ export default function CitySelectionWithSearch({
         name='city'
         value={city}
         autoFocus={isDropdownOpen}
-        className='block w-full px-4 py-2 text-gray-800 border rounded-md  border-gray-300 focus:outline-none'
+        className={`block w-full px-4 py-2 ${
+          bgColor === 'bg-cyan-200'
+            ? 'text-white placeholder:text-white'
+            : 'text-black placeholder:text-black'
+        } border rounded-md  border-gray-300 focus:outline-none`}
         type='text'
         onChange={handleCityChange}
         placeholder='Search a city...'
       />
-      <p
-        className='block px-4 py-2 text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer rounded-md'
-        onClick={() => handleAdditionCityClick('Mumbai')}
-      >
-        Mumbai
-      </p>
-      <p
-        className='block px-4 py-2 text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer rounded-md'
-        onClick={() => handleAdditionCityClick('Tokyo')}
-      >
-        Tokyo
-      </p>
-      <p
-        className='block px-4 py-2 text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer rounded-md'
-        onClick={() => handleAdditionCityClick('California')}
-      >
-        California
-      </p>
-      <p
-        className='block px-4 py-2 text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer rounded-md'
-        onClick={() => handleAdditionCityClick('Beijing')}
-      >
-        Beijing
-      </p>
+      {defaultCityOptions.length > 0 &&
+        defaultCityOptions.map((cityOptions: DefaultCityOptionsType) => (
+          <p
+            key={cityOptions.id}
+            className={`block px-4 py-2 ${
+              bgColor === 'bg-cyan-200'
+                ? 'text-white hover:bg-gray-100 hover:text-black'
+                : 'text-black hover:bg-orange-300 hover:text-white'
+            } cursor-pointer rounded-md`}
+            onClick={() => handleAdditionCityClick(cityOptions.city)}
+          >
+            {cityOptions.city}
+          </p>
+        ))}
     </form>
   );
 }

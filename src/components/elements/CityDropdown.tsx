@@ -17,6 +17,8 @@ export default function CityDropdown({
 
   const cityDropdownRef = useRef<HTMLDivElement>(null);
 
+  const bgColor: string | null = localStorage.getItem('bgColor');
+
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
       if (
@@ -33,14 +35,17 @@ export default function CityDropdown({
       document.removeEventListener('click', handleOutsideClick);
     };
   }, [cityDropdownRef, setIsDropdownMenuOpen]);
+
   return (
     <div
-      className='flex items-center justify-center w-full'
+      className='flex items-center justify-center w-full relative z-10'
       ref={cityDropdownRef}
     >
       <div className='relative group w-9/12'>
         <button
-          className='inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500'
+          className={`inline-flex justify-center w-full px-4 py-2 text-sm font-medium ${
+            bgColor === 'bg-cyan-200' ? 'bg-black' : 'bg-white'
+          } rounded-md shadow-sm`}
           onClick={() =>
             setIsDropdownMenuOpen((prevState: boolean) => !prevState)
           }

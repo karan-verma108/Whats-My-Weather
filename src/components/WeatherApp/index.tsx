@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { MoonIcon, SunIcon } from '@heroicons/react/24/outline';
 
 import { CityDropdown } from '../elements';
 import {
@@ -7,6 +6,7 @@ import {
   getDayAndTime,
   getWeatherDetails,
 } from '../../utils/helper';
+import TimeWithThemeToggler from '../elements/TimeWithThemeToggler';
 
 export default function WeatherApp(): JSX.Element {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -17,15 +17,19 @@ export default function WeatherApp(): JSX.Element {
     React.Dispatch<React.SetStateAction<string>>
   ] = useState<string>('');
 
-  const [isWeatherIconClicked, setIsWeatherIconClicked]: [
-    boolean,
-    React.Dispatch<React.SetStateAction<boolean>>
-  ] = useState<boolean>(false);
-
   const [currentBackground, setCurrentBackground]: [
     string,
     React.Dispatch<React.SetStateAction<string>>
   ] = useState<string>('');
+
+  const [bgColor, setBgColor] = useState(localStorage.getItem('bgColor'));
+
+  const handleThemeToggle = () => {
+    const newBgColor =
+      bgColor === 'bg-cyan-200' ? 'bg-violet-800' : 'bg-cyan-200';
+    setBgColor(newBgColor);
+    localStorage.setItem('bgColor', newBgColor);
+  };
 
   const tempFromApi: string = (data?.main?.temp - 273.15).toFixed(2);
   let tempInCelcius: number = Number(tempFromApi);
@@ -57,6 +61,8 @@ export default function WeatherApp(): JSX.Element {
         'https://storage.ko-fi.com/cdn/useruploads/display/59388fac-810b-4777-808c-bf52ad7ffaa8_xstrangee_a_man_and_a_woman_in_a_convertible_car_on_top_of_a__4c49ccc1-4eab-4e46-8f5b-3e369d0b7f15_3.png'
       );
     } else {
+      console.log('last is true');
+
       setCurrentBackground('');
     }
   };
@@ -76,7 +82,7 @@ export default function WeatherApp(): JSX.Element {
   const { todayDate, dayResult }: { todayDate: string; dayResult: string } =
     getDayAndTime();
 
-  const bgColor: string | null = localStorage.getItem('bgColor');
+  // const bgColor: string | null = localStorage.getItem('bgColor');
 
   useEffect(() => {
     const timeResult: string = getCurrentTime();
@@ -99,7 +105,7 @@ export default function WeatherApp(): JSX.Element {
   return (
     <div
       className={`flex justify-center items-center h-screen ${
-        bgColor === 'bg-cyan-200' ? 'text-black' : 'text-white'
+        bgColor === 'bg-cyan-200' ? 'text-white' : 'text-black'
       }`}
     >
       {data && data !== undefined && (
@@ -111,42 +117,13 @@ export default function WeatherApp(): JSX.Element {
             backgroundRepeat: 'no-repeat',
           }}
         >
-          <div className='flex justify-between'>
-            <div>
-              <p
-                className={`${
-                  bgColor === 'bg-cyan-200' ? 'text-black' : 'text-white'
-                }`}
-              >
-                {time}
-              </p>
-            </div>
-            <div>
-              {!isWeatherIconClicked && bgColor === 'bg-cyan-200' ? (
-                <MoonIcon
-                  className='w-6 text-black cursor-pointer'
-                  onClick={() => {
-                    localStorage.setItem('bgColor', 'bg-violet-800');
-                    setIsWeatherIconClicked(true);
-                  }}
-                />
-              ) : (
-                <SunIcon
-                  className='w-6 text-white cursor-pointer'
-                  onClick={() => {
-                    localStorage.setItem('bgColor', 'bg-cyan-200');
-                    setIsWeatherIconClicked(false);
-                  }}
-                />
-              )}
-            </div>
-          </div>
+          <TimeWithThemeToggler time={time} onThemeToggle={handleThemeToggle} />
           <CityDropdown data={data} setData={setData} />
           <div
             className={`w-2/3 h-1/3 flex flex-col text-xl justify-center items-center rounded-xl mx-auto ${
               bgColor === 'bg-violet-800'
-                ? 'bg-black bg-opacity-50'
-                : 'bg-white'
+                ? 'bg-white opacity-75'
+                : 'bg-black opacity-75'
             } text-2xl`}
           >
             <p className='text-3xl leading-10 font-medium'>{todayDate}</p>

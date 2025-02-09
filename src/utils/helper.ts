@@ -66,3 +66,27 @@ export const getWeatherDetails = () => {
     }
   });
 };
+
+const randomImages = [''];
+
+export const defaultCityOptions: {
+  id: number;
+  city: string;
+}[] = [
+  {
+    id: 1,
+    city: 'Mumbai',
+  },
+  {
+    id: 2,
+    city: 'Tokyo',
+  },
+  {
+    id: 3,
+    city: 'Kathmandu',
+  },
+  {
+    id: 4,
+    city: 'Beijing',
+  },
+];
