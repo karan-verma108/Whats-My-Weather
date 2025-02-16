@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
-import { CityDropdown } from '../elements';
 import {
-  getCurrentTime,
-  getDayAndTime,
-  getWeatherDetails,
-} from '../../utils/helper';
-import TimeWithThemeToggler from '../elements/TimeWithThemeToggler';
+  CityDropdown,
+  TimeWithThemeToggler,
+  WeatherAndTimeDetails,
+} from '../elements';
+import { getCurrentTime, getWeatherDetails } from '../../utils/helper';
 import ImageGalleryModal from '../modals/ImageGalleryModal';
 
 export default function WhatsMyWeather(): JSX.Element {
@@ -89,9 +88,6 @@ export default function WhatsMyWeather(): JSX.Element {
       .catch((err) => console.log('err', err));
   }
 
-  const { todayDate, dayResult }: { todayDate: string; dayResult: string } =
-    getDayAndTime();
-
   setTimeout(() => {
     const timeResult: string = getCurrentTime();
     setTime(timeResult);
@@ -126,27 +122,11 @@ export default function WhatsMyWeather(): JSX.Element {
         >
           <TimeWithThemeToggler time={time} onThemeToggle={handleThemeToggle} />
           <CityDropdown data={data} setData={setData} />
-          <div
-            className={`relative w-2/3 h-1/3 flex flex-col text-xl justify-center items-center rounded-xl mx-auto ${
-              bgColor === 'bg-violet-800'
-                ? 'bg-white opacity-75'
-                : 'bg-black opacity-75'
-            } text-2xl`}
-          >
-            <p className='text-3xl leading-10 font-medium'>{todayDate}</p>
-            <p className='text-3xl leading-10 font-medium'>{dayResult}</p>
-            <p className='text-3xl leading-10 font-medium'>{tempInCelcius}°C</p>
-            <p
-              className={`absolute text-sm ${
-                bgColor === 'bg-cyan-200'
-                  ? 'bg-black text-white'
-                  : 'bg-white text-black'
-              } cursor-pointer underline top-[105%] py-1.5 px-2 rounded-lg`}
-              onClick={() => setIsOpen(true)}
-            >
-              Update Background
-            </p>
-          </div>
+          <WeatherAndTimeDetails
+            temp={tempInCelcius}
+            bgColor={bgColor}
+            setIsOpen={setIsOpen}
+          />
           <ImageGalleryModal
             isOpen={isOpen}
             onClose={handleModalClose}

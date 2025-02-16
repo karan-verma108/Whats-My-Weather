@@ -10,6 +10,21 @@ export const dayObj: Record<number, string> = {
   6: 'Saturday',
 };
 
+export const monthObj: Record<number, string> = {
+  0: 'Jan',
+  1: 'Feb',
+  2: 'Mar',
+  3: 'Apr',
+  4: 'May',
+  5: 'Jun',
+  6: 'Jul',
+  7: 'Aug',
+  8: 'Sep',
+  9: 'Oct',
+  10: 'Nov',
+  11: 'dec',
+};
+
 export const getCurrentTime = (): string => {
   const time = new Date();
   let hours: number | string = time.getHours();
@@ -38,7 +53,12 @@ export const getCurrentTime = (): string => {
 
 export const getDayAndTime = () => {
   const date = new Date();
-  const todayDate = date.toLocaleDateString();
+  const currentDate = date.getDate();
+  const currentYear = date.getFullYear();
+  const month = date.getMonth();
+  const currentMonth = monthObj[month as keyof typeof monthObj];
+
+  const todayDate = `${currentDate}-${currentMonth}-${currentYear}`;
   const day = date.getDay();
 
   const dayResult = dayObj[day as keyof typeof dayObj];

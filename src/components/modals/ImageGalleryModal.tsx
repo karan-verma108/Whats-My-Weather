@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { ImagesGalleryType } from '../../types';
 import { imagesGallery } from '../../utils/helper';
+import { ApplyBackgroundCTA, CloseModalCTA } from '../atoms';
 
 export default function ImageGalleryModal({
   isOpen,
@@ -17,7 +18,7 @@ export default function ImageGalleryModal({
     setClickedImage(clickedImgSrc);
   };
 
-  const handleBackgroundSave = () => {
+  const handleBackgroundApply = () => {
     setCurrentBackground(clickedImage);
     onClose();
   };
@@ -56,38 +57,11 @@ export default function ImageGalleryModal({
             <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
               Select Background
             </h3>
-            <button
-              type='button'
-              onClick={onClose}
-              className='text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm h-8 w-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white'
-              data-modal-toggle='timeline-modal'
-            >
-              <svg
-                className='w-3 h-3'
-                aria-hidden='true'
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 14 14'
-              >
-                <path
-                  stroke='currentColor'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth='2'
-                  d='m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6'
-                />
-              </svg>
-            </button>
+            <CloseModalCTA onClose={onClose} />
           </div>
           <div className='px-4 md:px-5 pb-6 pt-1 flex flex-col gap-4'>
             <div className='flex flex-col gap-1'>{memoizedGallery}</div>
-
-            <button
-              onClick={handleBackgroundSave}
-              className='text-white inline-flex w-full justify-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer'
-            >
-              Apply
-            </button>
+            <ApplyBackgroundCTA onApply={handleBackgroundApply} />
           </div>
         </div>
       </div>
