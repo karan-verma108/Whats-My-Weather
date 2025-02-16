@@ -7,6 +7,7 @@ import {
   getWeatherDetails,
 } from '../../utils/helper';
 import TimeWithThemeToggler from '../elements/TimeWithThemeToggler';
+import Modal from '../elements/Modal';
 
 export default function WeatherApp(): JSX.Element {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -22,7 +23,16 @@ export default function WeatherApp(): JSX.Element {
     React.Dispatch<React.SetStateAction<string>>
   ] = useState<string>('');
 
+  const [isOpen, setIsOpen]: [
+    boolean,
+    React.Dispatch<React.SetStateAction<boolean>>
+  ] = useState<boolean>(false);
+
   const [bgColor, setBgColor] = useState(localStorage.getItem('bgColor'));
+
+  const handleModalClose = () => {
+    setIsOpen(false);
+  };
 
   const handleThemeToggle = () => {
     const newBgColor =
@@ -61,9 +71,9 @@ export default function WeatherApp(): JSX.Element {
         'https://storage.ko-fi.com/cdn/useruploads/display/59388fac-810b-4777-808c-bf52ad7ffaa8_xstrangee_a_man_and_a_woman_in_a_convertible_car_on_top_of_a__4c49ccc1-4eab-4e46-8f5b-3e369d0b7f15_3.png'
       );
     } else {
-      console.log('last is true');
-
-      setCurrentBackground('');
+      setCurrentBackground(
+        'https://wallpaper.forfun.com/fetch/64/6473e19c6c31cfb0c17f827af1512aa6.jpeg'
+      );
     }
   };
 
@@ -82,12 +92,10 @@ export default function WeatherApp(): JSX.Element {
   const { todayDate, dayResult }: { todayDate: string; dayResult: string } =
     getDayAndTime();
 
-  // const bgColor: string | null = localStorage.getItem('bgColor');
-
-  useEffect(() => {
+  setTimeout(() => {
     const timeResult: string = getCurrentTime();
     setTime(timeResult);
-  }, []);
+  }, 1000);
 
   useEffect(() => {
     getWeatherDetails()
@@ -97,7 +105,6 @@ export default function WeatherApp(): JSX.Element {
 
   useEffect(() => {
     if (!isNaN(tempInCelcius)) {
-      console.log('fn is working');
       handleCurrentBackground();
     }
   }, [tempInCelcius]);
@@ -110,7 +117,7 @@ export default function WeatherApp(): JSX.Element {
     >
       {data && data !== undefined && (
         <div
-          className={`xl:w-1/4 w-full flex flex-col gap-28 h-screen rounded-lg mx-auto p-2.5 shadow-2xl`}
+          className={`relative xl:w-1/4 w-full flex flex-col gap-28 h-screen rounded-lg mx-auto p-2.5 shadow-2xl`}
           style={{
             backgroundImage: `url(${currentBackground})`,
             backgroundSize: 'cover',
@@ -120,7 +127,7 @@ export default function WeatherApp(): JSX.Element {
           <TimeWithThemeToggler time={time} onThemeToggle={handleThemeToggle} />
           <CityDropdown data={data} setData={setData} />
           <div
-            className={`w-2/3 h-1/3 flex flex-col text-xl justify-center items-center rounded-xl mx-auto ${
+            className={`relative w-2/3 h-1/3 flex flex-col text-xl justify-center items-center rounded-xl mx-auto ${
               bgColor === 'bg-violet-800'
                 ? 'bg-white opacity-75'
                 : 'bg-black opacity-75'
@@ -129,7 +136,22 @@ export default function WeatherApp(): JSX.Element {
             <p className='text-3xl leading-10 font-medium'>{todayDate}</p>
             <p className='text-3xl leading-10 font-medium'>{dayResult}</p>
             <p className='text-3xl leading-10 font-medium'>{tempInCelcius}°C</p>
+            <p
+              className={`absolute text-sm ${
+                bgColor === 'bg-cyan-200'
+                  ? 'bg-black text-white'
+                  : 'bg-white text-black'
+              } cursor-pointer underline top-[105%] py-1.5 px-2 rounded-lg`}
+              onClick={() => setIsOpen(true)}
+            >
+              Update Background
+            </p>
           </div>
+          <Modal
+            isOpen={isOpen}
+            onClose={handleModalClose}
+            setCurrentBackground={setCurrentBackground}
+          />
         </div>
       )}
     </div>

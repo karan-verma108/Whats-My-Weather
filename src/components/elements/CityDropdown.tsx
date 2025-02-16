@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+
 import CitySelectionWithSearch from './CitySelectionWithSearch';
 
 export default function CityDropdown({
