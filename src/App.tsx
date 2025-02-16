@@ -1,7 +1,5 @@
-import WeatherApp from './components/WeatherApp';
+import WhatsMyWeather from './components/whatsMyWeather';
 
-function App() {
-  return <WeatherApp />;
+export default function App(): JSX.Element {
+  return <WhatsMyWeather />;
 }
-
-export default App;

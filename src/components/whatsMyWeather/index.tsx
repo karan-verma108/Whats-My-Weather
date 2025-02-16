@@ -7,9 +7,9 @@ import {
   getWeatherDetails,
 } from '../../utils/helper';
 import TimeWithThemeToggler from '../elements/TimeWithThemeToggler';
-import Modal from '../elements/Modal';
+import ImageGalleryModal from '../modals/ImageGalleryModal';
 
-export default function WeatherApp(): JSX.Element {
+export default function WhatsMyWeather(): JSX.Element {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [data, setData] = useState<any>({});
 
@@ -147,7 +147,7 @@ export default function WeatherApp(): JSX.Element {
               Update Background
             </p>
           </div>
-          <Modal
+          <ImageGalleryModal
             isOpen={isOpen}
             onClose={handleModalClose}
             setCurrentBackground={setCurrentBackground}

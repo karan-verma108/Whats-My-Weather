@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { defaultCityOptions } from '../../utils/helper';
 
 interface DefaultCityOptionsType {
@@ -16,34 +16,34 @@ export default function CitySelectionWithSearch({
   isDropdownOpen: boolean;
   setIsDropdownMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }): JSX.Element {
-  const [city, setCity]: [
-    string,
-    React.Dispatch<React.SetStateAction<string>>
-  ] = useState<string>('');
-
+  const [city, setCity] = useState<string>('');
   const bgColor: string | null = localStorage.getItem('bgColor');
 
-  const handleCityChange = (e: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setCity(e.target.value);
-  };
-
-  const handleCitySubmit = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-
+  const fetchWeatherData = (cityName: string) => {
     fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.VITE_WEATHER_API_KEY}`
+      `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${process.env.VITE_WEATHER_API_KEY}`
     )
       .then((res) => res.json().then((data) => setData(data)))
       .catch((err) => console.log('err', err));
-
-    setCity('');
-    setIsDropdownMenuOpen(false);
   };
 
-  const handleAdditionCityClick = (additionalCity: string): void => {
+  const handleCityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCity(e.target.value);
+  };
+
+  const handleCitySubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (city.trim().length > 0) {
+      fetchWeatherData(city);
+      setCity('');
+      setIsDropdownMenuOpen(false);
+    }
+  };
+
+  const handleAdditionCityClick = (additionalCity: string) => {
+    fetchWeatherData(additionalCity);
     setCity(additionalCity);
+    setIsDropdownMenuOpen(false);
   };
 
   return (
@@ -62,7 +62,7 @@ export default function CitySelectionWithSearch({
           bgColor === 'bg-cyan-200'
             ? 'text-white placeholder:text-white'
             : 'text-black placeholder:text-black'
-        } border rounded-md  border-gray-300 focus:outline-none`}
+        } border rounded-md border-gray-300 focus:outline-none`}
         type='text'
         onChange={handleCityChange}
         placeholder='Search a city...'
